@@ -1,10 +1,11 @@
 import { Engine } from './engine.js';
-import type { IWorkflow, Task } from './types.js';
+import { IWorkflow, Task, WorkflowResult } from './types.js';
+import { CodeOptimizerWorkflow } from './workflows/code-optimizer.js';
 
 // Example Workflow: Email Scheduler
 const EmailWorkflow: IWorkflow = {
   name: 'send-email',
-  async execute(task: Task) {
+  async execute(task: Task): Promise<WorkflowResult> {
     // Simulate processing
     console.log(`   -> [EmailWorkflow] Sending email to ${task.payload.to}...`);
     
@@ -22,11 +23,14 @@ const engine = new Engine();
 
 // Register workflows
 engine.registerWorkflow(EmailWorkflow);
+engine.registerWorkflow(new CodeOptimizerWorkflow());
 
 // Add some dummy tasks
 engine.addTask('send-email', { to: 'bob@example.com', subject: 'Meeting' });
-engine.addTask('send-email', { to: 'alice@example.com', subject: 'Updates' });
-engine.addTask('unknown-task', {}); // Should fail
+engine.addTask('code-optimizer', { 
+  repoUrl: 'https://github.com/nndr229/clara-automator.git', 
+  repoName: 'clara-automator' 
+});
 
 // Start the engine
 engine.start();
@@ -35,4 +39,4 @@ engine.start();
 setTimeout(() => {
   console.log('[Main] Demo finished, stopping engine.');
   engine.stop();
-}, 10000);
+}, 20000); // 20s run
