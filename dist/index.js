@@ -21,8 +21,8 @@ engine.registerWorkflow(new CodeOptimizerWorkflow());
 // Add some dummy tasks
 engine.addTask('send-email', { to: 'bob@example.com', subject: 'Meeting' });
 engine.addTask('code-optimizer', {
-    repoUrl: 'https://github.com/nndr229/todoAppHooks.git',
-    repoName: 'todoAppHooks'
+    repoUrl: 'https://github.com/nndr229/DoodlePredictor.git',
+    repoName: 'DoodlePredictor'
 });
 // Start the engine
 engine.start();

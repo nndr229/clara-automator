@@ -141,23 +141,30 @@ export default [
     fs.writeFileSync(configPath, configContent);
 
     const eslint = new ESLint({ cwd: repoPath, fix: true });
-    const results = await eslint.lintFiles(['**/*.{js,jsx,ts,tsx}']);
-    
-    let totalErrors = 0;
-    let totalWarnings = 0;
-    let fixed = 0;
-    let filesFound = results.length > 0;
+    try {
+      const results = await eslint.lintFiles(['**/*.{js,jsx,ts,tsx}']);
+      
+      let totalErrors = 0;
+      let totalWarnings = 0;
+      let fixed = 0;
+      let filesFound = results.length > 0;
 
-    for (const result of results) {
-      totalErrors += result.errorCount;
-      totalWarnings += result.warningCount;
-      if (result.output) fixed++;
+      for (const result of results) {
+        totalErrors += result.errorCount;
+        totalWarnings += result.warningCount;
+        if (result.output) fixed++;
+      }
+
+      if (fixed > 0) await ESLint.outputFixes(results);
+
+      const score = Math.max(0, 100 - (totalErrors * 5) - (totalWarnings * 1));
+      return { score, findings: totalErrors + totalWarnings, fixed, filesFound };
+    } catch (e: any) {
+      if (e.message.includes('No files matching')) {
+        return { score: 100, findings: 0, fixed: 0, filesFound: false };
+      }
+      throw e;
     }
-
-    if (fixed > 0) await ESLint.outputFixes(results);
-
-    const score = Math.max(0, 100 - (totalErrors * 5) - (totalWarnings * 1));
-    return { score, findings: totalErrors + totalWarnings, fixed, filesFound };
   }
 
   private async analyzePython(repoPath: string) {
