@@ -37,12 +37,15 @@ import plugin from '${pluginPath}';
 
 export default [
   {
-    files: ["**/*.ts"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       parser: parser,
       parserOptions: {
         ecmaVersion: 2020,
-        sourceType: "module"
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true
+        }
       }
     },
     plugins: {
@@ -50,10 +53,10 @@ export default [
     },
     rules: {
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn"
     },
-    ignores: ["dist/", "node_modules/", "temp-repos/"]
+    ignores: ["dist/", "node_modules/", "temp-repos/", "build/", "public/"]
   }
 ];
 `;
@@ -66,7 +69,7 @@ export default [
                 fix: true
             });
             console.log(`[Optimizer] Analyzing code in ${repoPath} using injected config...`);
-            const results = await eslint.lintFiles(['**/*.ts']);
+            const results = await eslint.lintFiles(['**/*.{js,jsx,ts,tsx}']);
             // Calculate Score
             let totalErrors = 0;
             let totalWarnings = 0;

@@ -21,8 +21,8 @@ engine.registerWorkflow(new CodeOptimizerWorkflow());
 // Add some dummy tasks
 engine.addTask('send-email', { to: 'bob@example.com', subject: 'Meeting' });
 engine.addTask('code-optimizer', {
-    repoUrl: 'https://github.com/nndr229/clara-automator.git',
-    repoName: 'clara-automator'
+    repoUrl: 'https://github.com/nndr229/todoAppHooks.git',
+    repoName: 'todoAppHooks'
 });
 // Start the engine
 engine.start();
